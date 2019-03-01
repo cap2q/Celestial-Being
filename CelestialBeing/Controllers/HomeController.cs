@@ -13,12 +13,23 @@ namespace CelestialBeing.Controllers
     public class HomeController : Controller
     {
         const string baseURL = "https://api.nasa.gov/neo/rest/v1/feed?";
-        const string apiKey = "ltq5tyqWqJ2SppBtiQWJXAwdl45mtydCpr4NJU5h";
+        const string apiKey = "api_key=ltq5tyqWqJ2SppBtiQWJXAwdl45mtydCpr4NJU5h";
         
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Date(DateModel model)
+        {
+            string dateSearched = "start_date=" + model.Year + "-" + model.Month + "-" + model.Day + "&";
+            return RedirectToAction("Results", "Home", new { Date = dateSearched } );
+        }
+        public async Task<ActionResult> Results(string date)
         {
 
-            var data = new Asteroid();
+            var data = new AsteroidModel();
 
             using (var client = new HttpClient())
             {
@@ -28,12 +39,12 @@ namespace CelestialBeing.Controllers
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseMessage = await client.GetAsync(baseURL + "start_date=2015-09-07&end_date=2015-09-08&api_key=" + apiKey);
+                HttpResponseMessage responseMessage = await client.GetAsync(baseURL + date + apiKey);
                 
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var responseResult = responseMessage.Content.ReadAsStringAsync().Result;
-                    data = JsonConvert.DeserializeObject<Asteroid>(responseResult);
+                    data = JsonConvert.DeserializeObject<AsteroidModel>(responseResult);
                 }
                 return View(data);
             }

@@ -30,3 +30,4 @@ C:\Users\Selrach\source\repos\CelestialBeing\CelestialBeing\obj\Debug\netcoreapp
 C:\Users\Selrach\source\repos\CelestialBeing\CelestialBeing\obj\Debug\netcoreapp2.1\CelestialBeing.dll
 C:\Users\Selrach\source\repos\CelestialBeing\CelestialBeing\obj\Debug\netcoreapp2.1\CelestialBeing.pdb
 C:\Users\Selrach\source\repos\CelestialBeing\CelestialBeing\obj\Debug\netcoreapp2.1\CelestialBeing.csproj.CopyComplete
+C:\Users\Selrach\source\repos\CelestialBeing\CelestialBeing\obj\Debug\netcoreapp2.1\Razor\Views\Home\Results.g.cshtml.cs

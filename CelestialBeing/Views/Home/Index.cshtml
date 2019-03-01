@@ -1,6 +1,18 @@
-﻿@model CelestialBeing.Models.Asteroid
+﻿@model DateModel
+<fieldset>
+    @using (Html.BeginForm("Date", "Home"))
+        { 
+        <p>Please enter a date, using YYYY/MM/DD format.</p>
+        <div>
+            @Html.TextBoxFor(model => model.Year) /
+            @Html.TextBoxFor(model => model.Month) /
+            @Html.TextBoxFor(model => model.Day)
+        </div>
+        <br />
+        <button type="submit">Search</button>
+        }
 
-@{
-    ViewBag.Title = "Celestial Being";
-}
-    <p>Element Count: @Model.ElementCount</p>
+       
+       
+        
+</fieldset>

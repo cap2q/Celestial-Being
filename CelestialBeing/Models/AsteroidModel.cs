@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace CelestialBeing.Models
 {
-    public class Asteroid
+    public class AsteroidModel
     {
         public Links Links { get; set; }
         [JsonProperty("element_count")]
@@ -23,21 +23,28 @@ namespace CelestialBeing.Models
         public string Self { get; set; }
     }
 
-    public class EstimatedDiameter
-    {
-        public float Miles { get; set; }
-    }
 
-    public class Miles
-    {
-        [JsonProperty("estimated_diameter_min")]
-        public float MinEstimatedDiameter { get; set; }
-        [JsonProperty("estimated_diameter_max")]
-        public float MaxEstimatedDiameter { get; set; }
-    }
+
 
     public class NearEarthObjects
     {
-        public string Occurences { get; set; }
+        public Occurence Occurence;
     }
+
+    public class Occurence
+    {
+        public string Date { get; set; }
+    }
+    public class EstimatedDiameter
+    {
+        public Miles miles { get; set; }
+    }
+    public class Miles
+    {
+        [JsonProperty("estimated_diameter_min")]
+        public double MinEstimatedDiameter { get; set; }
+        [JsonProperty("estimated_diameter_max")]
+        public double MaxEstimatedDiameter { get; set; }
+    }
+
 }
