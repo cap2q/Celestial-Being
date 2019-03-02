@@ -13,6 +13,7 @@ namespace CelestialBeing.Models
         public int ElementCount { get; set; }
         [JsonProperty("near_earth_object")]
         public NearEarthObjects NearEarthObjects { get; set; }
+        public int Id { get; set; }
 
     }
 

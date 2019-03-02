@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using CelestialBeing.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
+using Newtonsoft.Json.Linq;
 
 namespace CelestialBeing.Controllers
 {
@@ -40,11 +41,21 @@ namespace CelestialBeing.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                 HttpResponseMessage responseMessage = await client.GetAsync(baseURL + date + apiKey);
-                
+
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var responseResult = responseMessage.Content.ReadAsStringAsync().Result;
-                    data = JsonConvert.DeserializeObject<AsteroidModel>(responseResult);
+                    dynamic json = JValue.Parse(responseResult);
+
+                    data.ElementCount = json.ElementCount;
+                    foreach (dynamic day in json.near_earth_objects)
+                    {
+                        foreach (dynamic nearEarthObject in day)
+                        {
+                            
+                        }
+                    }
+                 //   data = JsonConvert.DeserializeObject<AsteroidModel>(responseResult);
                 }
                 return View(data);
             }
