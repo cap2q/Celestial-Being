@@ -1,0 +1,28 @@
+﻿@model List<CelestialBeing.Models.AsteroidModel>
+
+@{
+    ViewBag.Title = "Celestial Being";
+}
+
+<div><b>Asteroids Approximate to Earth </b><br /></div>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Asteroid Name</th>
+        <th>Asteroid ID</th>
+        <th>Minimum Diameter (Miles)</th>
+        <th>Maximum Diameter (Miles)</th>
+        <th>Potentially Hazardous</th>
+
+    </tr>
+    @foreach (var asteroid in Model)
+    {
+        <tr>
+            <td>@asteroid.Name</td>
+            <td>@asteroid.Id</td>
+            <td>@asteroid.EstimatedMinimumDiameter</td>
+            <td>@asteroid.EstimatedMaximumDiameter</td>
+            <td>@asteroid.PotentiallyHazardous</td>
+       </tr>
+    } 
+</table>
+

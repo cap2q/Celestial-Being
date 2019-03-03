@@ -15,76 +15,73 @@ namespace CelestialBeing.Controllers
     {
         const string baseURL = "https://api.nasa.gov/neo/rest/v1/feed?";
         const string apiKey = "api_key=ltq5tyqWqJ2SppBtiQWJXAwdl45mtydCpr4NJU5h";
-        
+
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Date(DateModel model)
+        public ActionResult BuildQuery(DateModel model)
         {
-            string dateSearched = "start_date=" + model.Year + "-" + model.Month + "-" + model.Day + "&";
-            return RedirectToAction("Results", "Home", new { Date = dateSearched } );
+            string dateSearched = "start_date=" + model.Year + "-" + model.Month + "-" + model.Day + "&" + "end_date=" + model.Year + "-" + model.Month + "-" + model.Day + "&" + apiKey;
+            return RedirectToAction("CompileResults", "Home", new { Query = dateSearched });
         }
-        public async Task<ActionResult> Results(string date)
-        {
 
-            var data = new AsteroidModel();
+        public async Task<ActionResult> CompileResults(string query)
+        {
+            var asteroidList = new List<AsteroidModel>();
 
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(baseURL);
 
                 client.DefaultRequestHeaders.Clear();
-
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseMessage = await client.GetAsync(baseURL + date + apiKey);
+                HttpResponseMessage responseMessage = await client.GetAsync(baseURL + query);
 
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    var responseResult = responseMessage.Content.ReadAsStringAsync().Result;
-                    dynamic json = JValue.Parse(responseResult);
+                List<AsteroidModel> results = PopulateAsteroids(responseMessage);
 
-                    data.ElementCount = json.ElementCount;
-                    foreach (dynamic day in json.near_earth_objects)
-                    {
-                        foreach (dynamic nearEarthObject in day)
-                        {
-                            
-                        }
-                    }
-                 //   data = JsonConvert.DeserializeObject<AsteroidModel>(responseResult);
-                }
-                return View(data);
+                return View(results);
             }
         }
-        
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
 
-            return View();
+
+        private static List<AsteroidModel> PopulateAsteroids(HttpResponseMessage queryResult)
+        {
+            var asteroidList = new List<AsteroidModel>();
+
+            if (queryResult.IsSuccessStatusCode)
+            {
+                var responseResult = queryResult.Content.ReadAsStringAsync().Result;
+                dynamic json = JValue.Parse(responseResult);
+
+                foreach (dynamic day in json.near_earth_objects)
+                {
+                    foreach (dynamic occurence in day)
+                    {
+                        foreach (dynamic nearEarthObject in occurence)
+                        {
+                            var newAsteroid = new AsteroidModel();
+                            newAsteroid.Id = nearEarthObject.id;
+                            newAsteroid.PotentiallyHazardous = nearEarthObject.is_potentially_hazardous_asteroid;
+                            newAsteroid.Name = nearEarthObject.name;
+                            newAsteroid.EstimatedMinimumDiameter = nearEarthObject.estimated_diameter.miles.estimated_diameter_min;
+                            newAsteroid.EstimatedMaximumDiameter = nearEarthObject.estimated_diameter.miles.estimated_diameter_max;
+                            asteroidList.Add(newAsteroid);
+                        }
+                    }
+                }
+            }
+            return (asteroidList);
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-        
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
+
     }
 }

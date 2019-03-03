@@ -1,0 +1,32 @@
+﻿<div class="col-md-12">
+    <div class="panel panel-primary">
+        @model DateModel
+        <fieldset>
+            @using (Html.BeginForm("Date", "Home"))
+            {
+                <p>Please enter a date, using YYYY/MM/DD format.</p>
+                <div>
+                    @Html.TextBoxFor(model => model.Year) /
+                    @Html.TextBoxFor(model => model.Month) /
+                    @Html.TextBoxFor(model => model.Day)
+                </div>
+                <br />
+                <button type="submit">Search</button>
+            }
+
+
+
+
+        </fieldset>
+    </div><hr />
+<table id="tblAsteroid" class="table table-bordered table-striped table-responsive table-hover">
+    <thead>
+        <tr>
+            <th align="left" class="productth">Asteroid ID</th>
+            <th align="left" class="productth">Asteroid Name</th>
+            <th align="left" class="productth">Potentially Hazardous</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>  
