@@ -1,13 +1,9 @@
 ﻿@model DateModel
 @using (Html.BeginForm("BuildQuery", "Home"))
 {
-    <p>Please enter a date, using YYYY/MM/DD format.</p>
-    <div>
-        @Html.TextBoxFor(model => model.Year) /
-        @Html.TextBoxFor(model => model.Month) /
-        @Html.TextBoxFor(model => model.Day)
-    </div>
     <br />
+    <p>Please enter a date.</p>
+    @Html.TextBoxFor(Model => Model.DateRequested, new { type = "date" })
     <button type="submit">Search</button>
 }
 

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CelestialBeing.Models;
-using Newtonsoft.Json;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 
@@ -23,7 +21,7 @@ namespace CelestialBeing.Controllers
 
         public ActionResult BuildQuery(DateModel model)
         {
-            string dateSearched = "start_date=" + model.Year + "-" + model.Month + "-" + model.Day + "&" + "end_date=" + model.Year + "-" + model.Month + "-" + model.Day + "&" + apiKey;
+            string dateSearched = "start_date=" + model.DateRequested + "&" + "end_date=" + model.DateRequested + "&" + apiKey;
             return RedirectToAction("CompileResults", "Home", new { Query = dateSearched });
         }
 
