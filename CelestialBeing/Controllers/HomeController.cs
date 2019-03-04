@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CelestialBeing.Models;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace CelestialBeing.Controllers
 {
@@ -14,14 +15,20 @@ namespace CelestialBeing.Controllers
         const string baseURL = "https://api.nasa.gov/neo/rest/v1/feed?";
         const string apiKey = "api_key=ltq5tyqWqJ2SppBtiQWJXAwdl45mtydCpr4NJU5h";
 
-        public ActionResult Index()
+        IConfiguration _iconfiguration;
+        public HomeController(IConfiguration iconfiguration)
+        {
+            _iconfiguration = iconfiguration;
+        }
+
+            public ActionResult Index()
         {
             return View();
         }
 
         public ActionResult BuildQuery(DateModel model)
         {
-            string dateSearched = "start_date=" + model.DateRequested + "&" + "end_date=" + model.DateRequested + "&" + apiKey;
+            string dateSearched = "start_date=" + model.DateRequested + "&" + "end_date=" + model.DateRequested + "&" + _iconfiguration.GetSection("NeoWs").GetSection("APIKey").Value;
             return RedirectToAction("CompileResults", "Home", new { Query = dateSearched });
         }
 
@@ -31,7 +38,7 @@ namespace CelestialBeing.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(baseURL);
+                client.BaseAddress = new Uri(_iconfiguration.GetSection("NeoWs").GetSection("BaseURL").Value);
 
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));

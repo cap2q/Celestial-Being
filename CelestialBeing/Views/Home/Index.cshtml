@@ -1,9 +1,10 @@
 ﻿@model DateModel
 @using (Html.BeginForm("BuildQuery", "Home"))
 {
-    <br />
+<div class="body-content">
     <p>Please enter a date.</p>
     @Html.TextBoxFor(Model => Model.DateRequested, new { type = "date" })
     <button type="submit">Search</button>
+</div>
 }
 
