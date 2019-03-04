@@ -8,6 +8,4 @@
         public double EstimatedMaximumDiameter { get; set; }
         public bool PotentiallyHazardous { get; set; }
     }
-
-
 }

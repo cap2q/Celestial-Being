@@ -22,7 +22,21 @@ body {
 .carousel-inner .item img[src$=".svg"] {
     width: 100%;
 }
+.banner-image {
+    max-width: 100%;
+    max-height: 100%;
+}
 
+.input-date {
+    margin: auto;
+    width: 250px;
+}
+
+.banner {
+    height: 250px;
+    width: 400px;
+    margin: auto;
+}
 /* QR code generator */
 #qrCode {
     margin: 15px;

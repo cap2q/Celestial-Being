@@ -22,11 +22,14 @@
     <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
-        <a href="@Url.Action("Index", "Home")">
-            <img src="~/images/Meteor_Logo_Art.jpg" alt="" />
-        </a>
-        @RenderBody()
-        <hr />
+        <div class="banner">
+            <a href="@Url.Action("Index", "Home")">
+                <img class="banner-image" src="~/images/Meteor_Logo_Art.jpg" alt="" />
+            </a>
+        </div>
+        <div class="asteroid-content">
+            @RenderBody()
+        </div>
     </div>
 
     <environment include="Development">

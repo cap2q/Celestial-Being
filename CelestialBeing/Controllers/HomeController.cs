@@ -12,27 +12,26 @@ namespace CelestialBeing.Controllers
 {
     public class HomeController : Controller
     {
-        const string baseURL = "https://api.nasa.gov/neo/rest/v1/feed?";
-        const string apiKey = "api_key=ltq5tyqWqJ2SppBtiQWJXAwdl45mtydCpr4NJU5h";
-
+        // Dependency Injection to get access to BaseURL and APIKeys constructors based on definitions in appsettings.json
         IConfiguration _iconfiguration;
         public HomeController(IConfiguration iconfiguration)
         {
             _iconfiguration = iconfiguration;
         }
 
-            public ActionResult Index()
+        public ActionResult Index()
         {
             return View();
         }
-
+        // Concatenate the supplied date from the user via calenderpicker in the Index View to formulate our API Query to NeoWs.
         public ActionResult BuildQuery(DateModel model)
         {
-            string dateSearched = "start_date=" + model.DateRequested + "&" + "end_date=" + model.DateRequested + "&" + _iconfiguration.GetSection("NeoWs").GetSection("APIKey").Value;
-            return RedirectToAction("CompileResults", "Home", new { Query = dateSearched });
+            string dateSearched = $"start_date={model.DateRequested}&end_date={model.DateRequested}&{_iconfiguration.GetSection("NeoWs").GetSection("APIKey").Value}";
+            return RedirectToAction("GetAsteroids", "Home", new { Query = dateSearched });
         }
 
-        public async Task<ActionResult> CompileResults(string query)
+        // Sends the query to the NeoWs API, waiting for a response and then returning the result to the PopulateAsteroids method.
+        public async Task<ActionResult> GetAsteroids(string query)
         {
             var asteroidList = new List<AsteroidModel>();
 
@@ -43,7 +42,7 @@ namespace CelestialBeing.Controllers
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseMessage = await client.GetAsync(baseURL + query);
+                HttpResponseMessage responseMessage = await client.GetAsync(_iconfiguration.GetSection("NeoWs").GetSection("BaseURL").Value + query);
 
                 List<AsteroidModel> results = PopulateAsteroids(responseMessage);
 
@@ -51,7 +50,7 @@ namespace CelestialBeing.Controllers
             }
         }
 
-
+        // Parses the JSON received from the NeoWs API and returns a List<> with each asteroid and its relevant properties returned by the query.
         private static List<AsteroidModel> PopulateAsteroids(HttpResponseMessage queryResult)
         {
             var asteroidList = new List<AsteroidModel>();
@@ -81,12 +80,10 @@ namespace CelestialBeing.Controllers
             return (asteroidList);
         }
 
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
     }
 }
